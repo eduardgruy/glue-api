@@ -82,6 +82,13 @@ paths:
             type: string
           required: true
           description: ID of the flow to update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Flow"
+        description: Flow object that needs to be added to the store
+        required: true          
       responses:
         "201":
           description: Created
@@ -163,7 +170,7 @@ paths:
               schema:
                 items:
                   $ref: "#/components/schemas/Process"
-  "/Process/{id}":
+  "/process/{id}":
     get:
       tags:
         - Processes
@@ -225,7 +232,7 @@ paths:
           description: Not found            
         "400":
           description: Error occured             
-  "/Process/{id}/run":
+  "/process/{id}/run":
     post:
       tags:
         - Processes
@@ -480,21 +487,15 @@ paths:
         "201":
           description: Created
 servers:
-  - url: "https://virtserver.swaggerhub.com/D629/glue-api/4.0.0"
+  - url: "https://localhost:443/glue/api/v1"
+security:
+  - basicAuth: [] 
 components:
   securitySchemes:
-    pipelinestore_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: "http://pipelinestore.swagger.io/oauth/dialog"
-          scopes:
-            "write:pipelines": modify pipelines in your account
-            "read:pipelines": read your pipelines
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
+    basicAuth:
+      scheme: basic
+      type: http
+
   schemas:
     Pipeline:
       type: object
