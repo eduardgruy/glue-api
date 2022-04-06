@@ -11,7 +11,7 @@ tags:
     description: Builds a flow
   - name: Processes
     description: Extraction processes
-  - name: Jobs
+  - name: Requests
     description: Monitoring
   - name: Status
     description: Monitoring
@@ -262,14 +262,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Job"
+                $ref: "#/components/schemas/Request"
         "404":
           description: Not found
-  "/processes/{id}/jobs":
+  "/processes/{id}/requests":
     get:
       tags:
         - Processes
-      summary: Returns executions of a job
+      summary: Returns executions of a request
       parameters:
         - in: path
           name: id
@@ -296,14 +296,14 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: "#/components/schemas/Job"
+                  $ref: "#/components/schemas/Request"
         "404":
           description: Not found
-  "/processes/{processId}/jobs/{jobId}":
+  "/processes/{processId}/requests/{requestId}":
     get:
       tags:
         - Processes
-      summary: Returns a specific job details
+      summary: Returns a specific request details
       parameters:
         - in: path
           name: processId
@@ -312,11 +312,11 @@ paths:
           required: true
           description: ID of the Process to retrieve
         - in: path
-          name: jobId
+          name: requestId
           schema:
             type: string
           required: true
-          description: ID of the job to retrieve
+          description: ID of the request to retrieve
 
       responses:
         "200":
@@ -324,16 +324,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Job"
+                $ref: "#/components/schemas/Request"
         "404":
           description: Not found
 
-  "/jobs":
+  "/requests":
     get:
       tags:
-        - Jobs
-      summary: Returns executions of a job
+        - Requests
+      summary: Returns executions of a request
       parameters:
+        - in: query
+          name: processId
+          schema:
+            type: string
         - in: query
           name: status
           schema:
@@ -358,21 +362,21 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: "#/components/schemas/Job"
+                  $ref: "#/components/schemas/Request"
         "404":
           description: Not found          
-  "/jobs/{jobId}":
+  "/requests/{requestId}":
     get:
       tags:
-        - Jobs
-      summary: Returns a specific a job
+        - Requests
+      summary: Returns a specific a request
       parameters:
         - in: path
-          name: jobId
+          name: requestId
           schema:
             type: string
           required: true
-          description: ID of the job to retrieve
+          description: ID of the request to retrieve
       responses:
         "200":
           description: Successful
@@ -380,21 +384,21 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: "#/components/schemas/Job"
+                  $ref: "#/components/schemas/Request"
         "404":
           description: Not found          
-  "/jobs/{jobId}/logs":
+  "/requests/{requestId}/logs":
     get:
       tags:
-        - Jobs
+        - Requests
       summary: Returns app. log
       parameters:
         - in: path
-          name: jobId
+          name: requestId
           schema:
             type: string
           required: true
-          description: ID of the job to retrieve
+          description: ID of the request to retrieve
       responses:
         "200":
           description: Successful
@@ -402,7 +406,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: "#/components/schemas/Job"
+                  $ref: "#/components/schemas/Request"
         "404":
           description: Not found          
   "/status":
@@ -701,7 +705,7 @@ components:
             profile:
               type: string
               description: "profile for binary storage, should also include path prefix?"
-        number_of_jobs:
+        number_of_requests:
           type: integer
         flows:
           type: array
@@ -774,17 +778,17 @@ components:
           type: integer
         end_time:
           type: integer
-        jobs:
+        requests:
           type: array
           items:
-            $ref: "#/components/schemas/Job"
+            $ref: "#/components/schemas/Request"
 
-    Job:
+    Request:
       type: object
       properties:
         processId:
           type: integer
-        jobId:
+        requestId:
           type: integer
         status:
           type: string
@@ -802,14 +806,14 @@ components:
     Status:
       type: object
       properties:
-        jobs:
+        requests:
           type: object
           properties:
-            runningJobs:
+            runningRequests:
               type: integer
-            successfulJobs:
+            successfulRequests:
               type: integer
-            failedJobs:
+            failedRequests:
               type: integer
         storages:
           type: array
